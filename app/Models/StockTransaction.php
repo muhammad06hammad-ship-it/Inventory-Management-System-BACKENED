@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class StockTransaction extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'product_id',
+        'supplier_id',
+        'user_id',
+        'type',
+        'quantity',
+        'transaction_date',
+        'remarks',
+    ];
+
+    protected $casts = [
+        'transaction_date' => 'date',
+    ];
+
+    /**
+     * Get the product associated with this transaction.
+     */
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Get the supplier associated with this transaction.
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    /**
+     * Get the user who recorded this transaction.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Check if this is a stock in transaction.
+     */
+    public function isStockIn(): bool
+    {
+        return $this->type === 'in';
+    }
+
+    /**
+     * Check if this is a stock out transaction.
+     */
+    public function isStockOut(): bool
+    {
+        return $this->type === 'out';
+    }
+}
